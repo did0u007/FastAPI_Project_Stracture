@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from api.routers import routers_gen
 
 
@@ -8,6 +9,6 @@ for router in routers_gen():
     app.include_router(router)
 
 
-@app.get("/", status_code=200)
+@app.get("/")
 def index():
-    return {"status": "success"}
+    return JSONResponse({"status": "Running ..."})

@@ -13,6 +13,6 @@ def get_user():
 
 @router.get("/{id}")
 @lru_cache()
-def get_user(id):
+def get_user_by_id(id: int):
     print("on")
     return {"test": f"passed {id}"}
