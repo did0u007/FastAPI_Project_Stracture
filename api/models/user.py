@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Enum, ForeignKey, Integer, Time, Unicode
-from api.models import Base
-from api.core.enums import userType
+from api.models import *
+from api.core.enums import UserType
 from sqlalchemy.orm import relationship
 
 
@@ -13,8 +13,8 @@ class User(Base):
     password = Column("password", Unicode)
     profile_img = Column("profile_img", Integer, ForeignKey("images.id"))
     remember_token = Column("remember_token", Unicode)
-    user_type = Column("user_type", Enum(userType), default=userType.USER)
-    cities_id = Column("cities_id", Integer, ForeignKey("cities.id"))
+    user_type = Column("user_type", Enum(UserType), default=UserType.USER)
+    cities_id = Column("cities_id", Integer, ForeignKey("cities.id"), nullable=True)
     states_id = Column("states_id", Integer, ForeignKey("states.id"))
     address = Column("address", Unicode)
     phone = Column("phone", Unicode)
@@ -22,6 +22,6 @@ class User(Base):
     created_at = Column("created_at", Time)
     updated_at = Column("updated_at", Time)
 
-    cities = relationship("Cities", foreign_keys=cities_id)
-    states = relationship("States", foreign_keys=states_id)
-    images = relationship("Images", foreign_keys=profile_img)
+    Cities = relationship("City", foreign_keys=cities_id)
+    States = relationship("State", foreign_keys=states_id)
+    Images = relationship("File", foreign_keys=profile_img)

@@ -1,10 +1,12 @@
 from pydantic import BaseModel
 
 
-class fileRequest(BaseModel):
+class FileResponse(BaseModel):
+    url: str
+
+    class Config:
+        from_attributes = True
+
+
+class FileRequest(FileResponse):
     id: int
-    url: str
-
-
-class fileResponse(BaseModel):
-    url: str

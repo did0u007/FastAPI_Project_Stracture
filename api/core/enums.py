@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class userType(str, Enum):
+class UserType(str, Enum):
     USER = "user"
     ADMIN = "admin"
     SELLEER = "seller"

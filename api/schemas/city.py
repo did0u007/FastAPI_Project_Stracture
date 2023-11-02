@@ -1,15 +1,19 @@
 from pydantic import BaseModel
-from api.schemas import stateRequest, stateResponse
+from api.schemas import StateRequest, StateResponse
 
 
-class cityRequest(BaseModel):
+class City(BaseModel):
     id: int
     name: str
+
+
+class CityRequest(City):
     state_id: int
-    state: stateRequest
+    state: StateRequest
 
 
-class cityResponse(BaseModel):
-    id: int
-    name: str
-    state: stateResponse
+class CityResponse(City):
+    state: StateResponse
+
+    class Config:
+        from_attributes = True

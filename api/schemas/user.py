@@ -1,33 +1,31 @@
 from pydantic import BaseModel
-from api.core.enums import userType
-from api.schemas import fileResponse
-from api.schemas.city import cityResponse
-from api.schemas.state import stateResponse
+from api.core.enums import UserType
+from api.schemas import FileResponse
+from api.schemas.city import CityResponse
+from api.schemas.state import StateResponse
 
 
-class userRequest(BaseModel):
-    id: int
+class User(BaseModel):
     name: str
     username: str
     email: str
-    password: str
-    profile_img: fileResponse
-    user_type: userType
-    city_id: int | None
-    state_id: int
     address: str
     phone: str
 
 
-class userResponse(BaseModel):
+class UserRequest(User):
+    password: str
+    state_id: int
+    city_id: int | None
+
+
+class UserResponse(User):
     id: int
-    name: str
-    username: str
-    email: str
     profile_img: str | None
     remember_token: str | None
-    user_type: userType
-    city: cityResponse | None
-    state: stateResponse
-    address: str
-    phone: str
+    city: CityResponse | None
+    state: StateResponse
+    user_type: UserType
+
+    class Config:
+        from_attributes = True

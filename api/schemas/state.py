@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 
 
-class stateRequest(BaseModel):
-    id: int
+class StateRequest(BaseModel):
     name: str
 
 
-class stateResponse(BaseModel):
+class StateResponse(StateRequest):
     id: int
-    name: str
+
+    class Config:
+        from_attributes = True
