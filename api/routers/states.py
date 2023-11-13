@@ -1,7 +1,8 @@
 from functools import cache
-from typing import List
+from typing import Annotated, List
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
+from api.core.helper import limit_args_dependency
 from api.crud import state as st
 from api.db.database import get_db
 
@@ -17,6 +18,11 @@ async def get_all_states():
     pass
 
 
-@router.post("/create", tags=["admin"])
-async def create_state(state: StateRequest, db: Session = Depends(get_db)):
-    return state  # type: ignore
+@router.get(
+    "/create", tags=["admin"], response_model=List[StateResponse], dependencies=[limit_args_dependency()]  # type: ignore
+)
+async def create_state(
+    state: Annotated[List[str], Query(max_length=20)],
+    db: Session = Depends(get_db),
+):
+    return await st.create_state(db, state)  # type: ignore

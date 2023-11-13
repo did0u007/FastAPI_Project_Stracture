@@ -4,5 +4,5 @@ from api.models import *
 
 class File(Base):
     __tablename__ = "images"
-    id = Column("id", Integer, primary_key=True)  # type: ignore
+    id = Column("id", Integer, primary_key=True, autoincrement=True)  # type: ignore
     url = Column("url", Unicode)
