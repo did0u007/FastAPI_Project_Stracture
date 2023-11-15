@@ -15,7 +15,7 @@ engine = create_engine(
 sessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 
 
-class Base(MappedAsDataclass, DeclarativeBase):
+class Base(DeclarativeBase):
     pass
 
 
