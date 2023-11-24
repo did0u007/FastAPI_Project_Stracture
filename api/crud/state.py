@@ -1,9 +1,10 @@
-from sqlite3 import DatabaseError
-from api.core.helper import raise_error, sublists
-from api.models import State
-from sqlalchemy.orm import Session
-from typing import List
 from api.schemas.state import StateRequest
+from api.core.helper import raise_error, sublists
+from sqlalchemy.orm import Session
+from api.models import State
+from sqlite3 import DatabaseError
+from fastapi import status
+from typing import List
 from cache import AsyncTTL
 
 
@@ -11,37 +12,59 @@ from cache import AsyncTTL
 @AsyncTTL(time_to_live=120, maxsize=120, skip_args=1)
 async def db_get_state(db: Session, id):
     try:
-        print("###########################")
         return db.get_one(State, id)
     except Exception as e:
-        raise_error(404, f"State {id} Not Found")
+        raise_error(status.HTTP_404_NOT_FOUND, f"State {id} Not Found")
 
 
 ######## Get All State ##############
 @AsyncTTL(time_to_live=120, maxsize=120, skip_args=1)
 async def db_get_all_states(db: Session):
-    print("###########################")
     return db.query(State).all()
 
 
-# TODO: check if is there a states in the db
 ######## Create State ##############
 async def db_create_states(db: Session, states: List[StateRequest]):  # type: ignore
     existing_state = await db_get_all_states(db)
-    diff = sublists(
-        [i.capitalize() for i in states], [i.name for i in existing_state]  # type: ignore
-    )
-    if len(diff):
-        raise_error(409, f"You Try To Dublicate An Existing Item {diff}")
+    if existing_state:
+        diff = sublists(
+            [i.name.capitalize() for i in states], [i.name for i in existing_state]  # type: ignore
+        )
+        if diff:
+            raise_error(
+                status.HTTP_406_NOT_ACCEPTABLE,
+                f"You Try To Dublicate An Existing Item {diff}",
+            )
 
     try:
-        objs = [State(name=state.capitalize()) for state in states]  # type: ignore
-        # db.bulk_save_objects(objs)
+        objs = [State(name=state.name.capitalize()) for state in states]  # type: ignore
         db.add_all(objs)
-        db.flush(objs)
-        # print([obj.id for obj in objs])
+        # db.flush(objs)
         db.commit()
         return objs
     except DatabaseError as e:
         db.rollback()
         raise_error(502, str(e))
+
+
+######## Drop States ##############
+async def db_drop_states(db: Session, states: List[int]):
+    try:
+        dropped = db.query(State).filter(State.id.in_(states)).delete()
+        db.commit()
+        return dropped
+    except Exception as e:
+        db.rollback()
+        raise_error(502, str(e))
+
+
+######## Update States ##############
+async def db_update_state(db: Session, state_id: int, new_name: str):
+    try:
+        old_state = await db_get_state(db, state_id)  # type: ignore
+        old_state.name = new_name.capitalize()  # type: ignore
+        db.commit()
+        return old_state
+    except Exception as e:
+        db.rollback()
+        raise_error(status.HTTP_500_INTERNAL_SERVER_ERROR, str(e))

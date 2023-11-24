@@ -1,18 +1,15 @@
+from typing import Optional
+from api.schemas import StateResponse
 from pydantic import BaseModel
-from api.schemas import StateRequest, StateResponse
 
 
-class City(BaseModel):
-    id: int
+class CityRequest(BaseModel):
     name: str
+    state_id: Optional[int]
 
 
-class CityRequest(City):
-    state_id: int
-    state: StateRequest
-
-
-class CityResponse(City):
+class CityResponse(CityRequest):
+    id: int
     state: StateResponse
 
     class Config:

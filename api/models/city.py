@@ -1,11 +1,16 @@
-from sqlalchemy import Column, Integer, Unicode, ForeignKey
+from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import mapped_column as Column
+from sqlalchemy import ForeignKey
 from api.models import *
-from sqlalchemy.orm import relationship
 
 
 class City(Base):
     __tablename__ = "cities"
-    id = Column("id", Integer, primary_key=True, autoincrement=True)
-    name = Column("name", Unicode, index=True, nullable=False)
-    state_id = Column("states_id", Integer, ForeignKey("states.id"))
-    state = relationship("State", foreign_keys=state_id)
+    #
+    id: Mapped[int] = Column(primary_key=True, autoincrement="auto")
+    name: Mapped[str] = Column(index=True, nullable=False)
+    state_id: Mapped[int] = Column(
+        ForeignKey("states.id", ondelete="CASCADE"), nullable=False
+    )
+    #
+    state = relationship("State", back_populates="cities")

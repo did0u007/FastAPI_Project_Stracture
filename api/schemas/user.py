@@ -1,12 +1,11 @@
 from pydantic import BaseModel
 from api.core.enums import UserType
-from api.schemas import FileResponse
 from api.schemas.city import CityResponse
 from api.schemas.state import StateResponse
 
 
 class User(BaseModel):
-    name: str
+    name: str | None
     username: str
     email: str
     address: str
