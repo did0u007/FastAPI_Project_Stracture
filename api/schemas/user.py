@@ -8,12 +8,13 @@ class User(BaseModel):
     name: str | None
     username: str
     email: str
-    address: str
-    phone: str
+    address: str | None
+    phone: str | None
 
 
 class UserRequest(User):
     password: str
+    confirmed_password: str
     state_id: int
     city_id: int | None
 
@@ -21,7 +22,7 @@ class UserRequest(User):
 class UserResponse(User):
     id: int
     profile_img: str | None
-    remember_token: str | None
+    # remember_token: str | None
     city: CityResponse | None
     state: StateResponse
     user_type: UserType

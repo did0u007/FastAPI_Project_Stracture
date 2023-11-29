@@ -9,3 +9,5 @@ SQLAlchemy
 pysqlite3
 alembic 
 async-cache
+python-magic
+python-magic-bin

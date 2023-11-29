@@ -1,27 +1,30 @@
-from sqlalchemy import Column, Enum, ForeignKey, Integer, Time, Unicode
-from api.models import *
+from sqlalchemy.orm import mapped_column as Column
+from sqlalchemy.orm import relationship, Mapped
 from api.core.enums import UserType
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
+from api.models import *
+from typing import Optional
+import datetime as dt
 
 
 class User(Base):
     __tablename__ = "users"
-    id = Column("id", Integer, primary_key=True, autoincrement=True)
-    name = Column("name", Unicode)
-    username = Column("username", Unicode)
-    email = Column("email", Unicode)
-    password = Column("password", Unicode)
-    profile_img = Column("profile_img", Integer, ForeignKey("images.id"))
-    remember_token = Column("remember_token", Unicode)
-    user_type = Column("user_type", Enum(UserType), default=UserType.USER)
-    cities_id = Column("cities_id", Integer, ForeignKey("cities.id"), nullable=True)
-    states_id = Column("states_id", Integer, ForeignKey("states.id"))
-    address = Column("address", Unicode)
-    phone = Column("phone", Unicode)
-    deleted_at = Column("deleted_at", Time)
-    created_at = Column("created_at", Time)
-    updated_at = Column("updated_at", Time)
+    id: Mapped[int] = Column(primary_key=True, autoincrement="auto")
+    name: Mapped[Optional[str]] = Column(index=True, nullable=True)
+    username: Mapped[str] = Column(index=True)
+    email: Mapped[str] = Column(unique=True, index=True)
+    password: Mapped[str] = Column()
+    profile_img: Mapped[Optional[int]] = Column(ForeignKey("images.id"), nullable=True)
+    remember_token: Mapped[str] = Column()
+    user_type: Mapped[UserType] = Column(default=UserType.USER, nullable=False)
+    city_id: Mapped[Optional[int]] = Column(ForeignKey("cities.id"), nullable=True)
+    state_id: Mapped[int] = Column(ForeignKey("states.id"))
+    address: Mapped[str] = Column()
+    phone: Mapped[str] = Column(unique=True)
+    deleted_at: Mapped[dt.datetime] = Column(default=None)
+    created_at: Mapped[dt.datetime] = Column(default=lambda: dt.datetime.now(dt.UTC))
+    updated_at: Mapped[dt.datetime] = Column(default=None)
 
-    Cities = relationship("City", foreign_keys=cities_id)
-    States = relationship("State", foreign_keys=states_id)
+    Cities = relationship("City", foreign_keys=city_id)
+    States = relationship("State", foreign_keys=state_id)
     Images = relationship("File", foreign_keys=profile_img)
