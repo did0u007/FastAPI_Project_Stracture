@@ -8,7 +8,7 @@ from api.db import getDB
 router = APIRouter(prefix="/files", tags=["files"])
 
 
-@router.get("/get-file/{filename}", response_model=HTMLResponse)
+@router.get("/get-file/{filename}")
 async def get_file(
     filename: Annotated[str, Path],
     db: Session = Depends(getDB),

@@ -6,5 +6,7 @@ from api.schemas.user import UserRequest
 
 
 async def db_ceate_user(db: Session, user: UserRequest):
-    user = User(**user.model_dump())  # type: ignore
+    user_data = user.model_dump()
+    user_data.pop("confirmed_password", None)
+    user = User(**user_data)  # type: ignore
     return user

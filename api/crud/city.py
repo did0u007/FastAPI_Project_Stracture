@@ -1,4 +1,4 @@
-from api.schemas.city import CityRequest, CityResponse
+from api.schemas import CityRequest, CityResponse
 from api.core.helper import raise_error, sublists
 from sqlalchemy.orm import Session
 from api.models import City, State
@@ -18,7 +18,10 @@ async def db_get_state(db: Session, id):
 
 ########## Get All Cities ##########
 @AsyncTTL(time_to_live=30, skip_args=1)
-async def db_get_all_cities(db: Session, q: dict[str, int]):
+async def db_get_all_cities(
+    db: Session,
+    q: dict[str, int],
+):
     try:
         cities = (
             db.query(City).order_by(City.name).offset(q["skip"]).limit(q["limit"]).all()
@@ -53,7 +56,7 @@ async def db_create_city(
     if db_cities:
         exists_cities = sublists(
             [c.name for c in db_cities],
-            [c.name.capitalize() for c in cities_list],
+            [c.name for c in cities_list],
         )
         if exists_cities:
             raise_error(
@@ -61,9 +64,7 @@ async def db_create_city(
                 f"You Try To Dublicate An Existing Item {exists_cities}",
             )
     try:
-        cities_objs = [
-            City(name=i.name.capitalize(), state_id=state_id) for i in cities_list
-        ]
+        cities_objs = [City(name=i.name, state_id=state_id) for i in cities_list]
         db.add_all(cities_objs)
         db.flush(cities_objs)
         db.commit()
@@ -91,15 +92,15 @@ async def db_get_city(db, city_id):
 
 
 async def db_update_city(db: Session, city_id: int, new_city: CityRequest):
-    city = await db_get_city(db, city_id)
+    city: CityResponse = await db_get_city(db, city_id)  # type: ignore
 
-    if city.name == new_city.name.capitalize() and city.state_id == new_city.state_id:
+    if city.name == new_city.name and city.state_id == new_city.state_id:
         raise_error(
             status.HTTP_304_NOT_MODIFIED,
             f"Same data entred to update city ID {city_id}",
         )
 
-    city.name = new_city.name.capitalize() if new_city.name else city.name
+    city.name = new_city.name if new_city.name else city.name
     city.state_id = new_city.state_id if new_city.state_id else city.state_id
     db.flush([city])
     db.commit()
