@@ -1,9 +1,9 @@
 from api.core.middlewares import query, query_limit
 from api.schemas.city import CityRequest, CityResponse
-from api.db import getDB
 from sqlalchemy.orm import Session
 from api.crud import city as ct
 from fastapi import APIRouter, Body, Depends
+from api.db import getDB
 from typing import Annotated, List
 from anyio import Path
 
