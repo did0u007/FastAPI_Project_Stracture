@@ -1,11 +1,11 @@
 from api.core.middlewares import query_limit
 from api.routers.cities import sub_router
 from api.schemas.state import StateRequest, StateResponse
-from api.db import getDB
 from sqlalchemy.orm import Session
 from api.crud import state as st
 from fastapi import APIRouter, Body, Depends, Path
 from typing import Annotated, List
+from api.db import getDB
 
 router = APIRouter(prefix="/state", tags=["state"])
 

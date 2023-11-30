@@ -14,4 +14,3 @@ async def get_file(
     db: Session = Depends(getDB),
 ):
     return await fl.db_get_file(db, filename)  # type: ignore
-    ...
