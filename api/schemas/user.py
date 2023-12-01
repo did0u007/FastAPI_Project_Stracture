@@ -7,9 +7,15 @@ from pydantic import (
     ValidationInfo,
     constr,
     field_validator,
+    model_validator,
 )
+
+from sqlalchemy.orm import Session
+from api.db import getDB
 from api.core.enums import UserType
+from api.models import State
 from api.schemas import CityResponse, StateResponse
+from . import validate_from_db as _is
 
 password_pattern = re.compile(
     r"^(?=.*[a-z])"  # At least one lowercase letter
@@ -22,8 +28,8 @@ password_pattern = re.compile(
 
 class User(BaseModel):
     username: constr(strip_whitespace=True, min_length=3, max_length=25)  # type: ignore
-    name: str | None
-    address: str | None
+    name: str | None = None
+    address: str | None = None
     email: EmailStr
     phone: str | None = None
 
@@ -60,8 +66,29 @@ class UserRequest(User):
     @field_validator("confirmed_password")
     @classmethod
     def validate_confirmed_password(cls, value, info: ValidationInfo):
-        if value != info.password:  # type: ignore
-            raise ValueError("Confirmed password must be identical to the password")
+        if value != info.data.get("password"):
+            raise ValueError("Password confirmation must be identical to the password")
+        return value
+
+    @field_validator("state_id")
+    @classmethod
+    def validate_state(cls, value):
+        if not _is.valid_state(value):
+            raise ValueError(f"Invalid state ID {value}")
+        return value
+
+    @field_validator("city_id")
+    @classmethod
+    def validate_city(cls, value, info: ValidationInfo):
+        if not _is.valid_city(value):
+            raise ValueError(f"Invalid city ID {value}")
+        if not _is.valid_state_city(info.state_id, value):  # type: ignore
+            return value
+
+    @model_validator(mode="after")
+    def final_validator(self) -> "UserRequest":
+        self.__delattr__("confirmed_password")
+        return self
 
 
 class UserResponse(User):

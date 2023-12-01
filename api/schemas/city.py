@@ -6,14 +6,7 @@ from pydantic import (
     constr,
     field_validator,
 )
-from api.models import State
-
-
-def valid_state(id) -> bool:
-    if id is None:
-        return False
-    db = getDB().__next__()
-    return db.get(State, id) is not None
+from . import validate_from_db as _is
 
 
 class CityRequest(BaseModel):
@@ -28,7 +21,7 @@ class CityRequest(BaseModel):
     @field_validator("state_id")
     @classmethod
     def vildate_state(cls, value: int):
-        if not valid_state(value):
+        if not _is.valid_state(value):
             raise ValueError(f"Invalid state ID {value}")
 
         return value
