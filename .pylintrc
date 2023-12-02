@@ -1,1 +1,2 @@
 disable=C0114,C0116
+ignore = type

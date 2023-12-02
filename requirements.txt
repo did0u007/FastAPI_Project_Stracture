@@ -1,6 +1,6 @@
 fastapi 
 uvicorn
-pydantic 
+pydantic[email]
 pydantic_core 
 python-dotenv 
 python-jose 
@@ -9,3 +9,5 @@ SQLAlchemy
 pysqlite3
 alembic 
 async-cache
+python-magic
+python-magic-bin

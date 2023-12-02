@@ -28,7 +28,7 @@ async def db_create_states(db: Session, states: List[StateRequest]):  # type: ig
     existing_state = await db_get_all_states(db)
     if existing_state:
         diff = sublists(
-            [i.name.capitalize() for i in states], [i.name for i in existing_state]  # type: ignore
+            [i.name for i in states], [i.name for i in existing_state]  # type: ignore
         )
         if diff:
             raise_error(
@@ -37,7 +37,7 @@ async def db_create_states(db: Session, states: List[StateRequest]):  # type: ig
             )
 
     try:
-        objs = [State(name=state.name.capitalize()) for state in states]  # type: ignore
+        objs = [State(name=state.name) for state in states]  # type: ignore
         db.add_all(objs)
         # db.flush(objs)
         db.commit()
@@ -62,7 +62,7 @@ async def db_drop_states(db: Session, states: List[int]):
 async def db_update_state(db: Session, state_id: int, new_name: str):
     try:
         old_state = await db_get_state(db, state_id)  # type: ignore
-        old_state.name = new_name.capitalize()  # type: ignore
+        old_state.name = new_name  # type: ignore
         db.commit()
         return old_state
     except Exception as e:

@@ -1,31 +1,27 @@
-from functools import lru_cache
-from fastapi import APIRouter
+from typing import Annotated
+from fastapi import APIRouter, Body, Depends
+from api.db import getDB
+from api.models import User
 from api.schemas import UserResponse, UserRequest
+from sqlalchemy.orm import Session
+from api.crud import user as us
 
 
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-############ GET user #####################
-# TODO: return Auth user details.
-@router.get("/")
-@lru_cache()
-def get_user():
-    return {"test": "passed"}
-
-
 ############## Create User #####################
-@router.post("/", response_model=UserResponse)
-def create_user(
-    user: UserRequest,
+@router.post("/create")
+async def create_user(
+    user: Annotated[UserRequest, Body],
+    db: Session = Depends(getDB),
 ):
-    return user
+    return await us.db_ceate_user(db, user)
 
 
 ####################### ADMIN PRIVLEGE ONLY #################
 # TODO: Add check for admin only middleware here.
 @router.get("/{id}", tags=["admin"])
-@lru_cache()
-def get_user_by_id(id: int):
+async def get_user_by_id(id: int):
     print("on")
     return {"test": f"passed {id}"}

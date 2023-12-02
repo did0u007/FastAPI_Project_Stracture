@@ -1,11 +1,11 @@
 from api.core.middlewares import query_limit
 from api.routers.cities import sub_router
 from api.schemas.state import StateRequest, StateResponse
-from api.db.database import get_db
 from sqlalchemy.orm import Session
 from api.crud import state as st
 from fastapi import APIRouter, Body, Depends, Path
 from typing import Annotated, List
+from api.db import getDB
 
 router = APIRouter(prefix="/state", tags=["state"])
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/state", tags=["state"])
 @router.get(
     "/all", response_model=List[StateResponse]
 )  # response_model=List[StateResponse]
-async def get_all_states(db: Session = Depends(get_db)):
+async def get_all_states(db: Session = Depends(getDB)):
     return await st.db_get_all_states(db)
 
 
@@ -28,14 +28,14 @@ async def get_all_states(db: Session = Depends(get_db)):
 )
 async def create_state(
     states: Annotated[List[StateRequest], Body],  # type: ignore
-    db: Session = Depends(get_db),
+    db: Session = Depends(getDB),
 ):
     return await st.db_create_states(db, states)  # type: ignore
 
 
 ######## Drope States ##############
 @router.delete("/delete", tags=["admin"])
-async def delete_states(states: List[int], db: Session = Depends(get_db)):
+async def delete_states(states: List[int], db: Session = Depends(getDB)):
     return await st.db_drop_states(db, states)
 
 
@@ -43,7 +43,7 @@ async def delete_states(states: List[int], db: Session = Depends(get_db)):
 @router.get("/{id}", response_model=StateResponse)
 async def get_state(
     id: Annotated[int, Path(ge=1, title="State ID", allow_inf_nan=False)],
-    db: Session = Depends(get_db),
+    db: Session = Depends(getDB),
 ):
     return await st.db_get_state(db, id)  # type: ignore
 
@@ -53,7 +53,7 @@ async def get_state(
 async def update_state(
     id: Annotated[int, Path(ge=1, allow_inf_nan=False)],
     new_name: Annotated[StateRequest, Body],
-    db: Session = Depends(get_db),
+    db: Session = Depends(getDB),
 ):
     return await st.db_update_state(db, id, new_name.name)  # type: ignore
 

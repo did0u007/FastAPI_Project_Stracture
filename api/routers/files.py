@@ -1,20 +1,16 @@
-from typing import List
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from api.db.database import get_db
+from api.crud import file as fl
+from fastapi import APIRouter, Depends, Path
+from typing import Annotated, List
+from api.db import getDB
 
 router = APIRouter(prefix="/files", tags=["files"])
 
 
-@router.post("/upload")
-async def upload_files(
-    file: List[UploadFile] = File(),
-    db: Session = Depends(get_db),
+@router.get("/get-file/{filename}")
+async def get_file(
+    filename: Annotated[str, Path],
+    db: Session = Depends(getDB),
 ):
-    return [
-        {
-            "filename": f.filename,
-            "content_type": f.content_type,
-        }
-        for f in file
-    ]
+    return await fl.db_get_file(db, filename)  # type: ignore
