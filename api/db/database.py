@@ -4,8 +4,11 @@ from sqlalchemy.orm import MappedAsDataclass, DeclarativeBase
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
+from api.core import DATABASE_URL
 
-DATABASE_URL = "sqlite+pysqlite:///api/db/database.sqlite"  # should be came from core.setting [using .env file]
+
+# DATABASE_URL = "sqlite+pysqlite:///api/db/database.sqlite"  # should be came from core.setting [using .env file]
+
 engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False},
@@ -33,9 +36,11 @@ def get_db():
         db.close()
 
 
+"""
 ####### For Sqlite3 only ############
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
+"""

@@ -28,7 +28,7 @@ password_pattern = re.compile(
 
 class User(BaseModel):
     username: constr(strip_whitespace=True, min_length=3, max_length=25)  # type: ignore
-    name: str | None = None
+    name: constr(min_length=3, max_length=25) | None = None  # type: ignore
     address: str | None = None
     email: EmailStr
     phone: str | None = None
@@ -38,13 +38,6 @@ class User(BaseModel):
     def validate_username(cls, value):
         if " " in value:
             raise ValueError("Username can't have whitespace characters")
-        return value
-
-    @field_validator("name")
-    @classmethod
-    def validate_name(cls, value, info: ValidationInfo):
-        if value is None:
-            return (info.username).capitalize()  # type: ignore
         return value
 
 
@@ -82,7 +75,7 @@ class UserRequest(User):
     def validate_city(cls, value, info: ValidationInfo):
         if not _is.valid_city(value):
             raise ValueError(f"Invalid city ID {value}")
-        if not _is.valid_state_city(info.state_id, value):  # type: ignore
+        if not _is.valid_state_city(info.data.get("state_id"), value):  # type: ignore
             return value
 
     @model_validator(mode="after")
