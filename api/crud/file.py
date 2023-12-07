@@ -1,5 +1,5 @@
 from api.core.helper import raise_error
-from api.db.database import get_db
+from api.db import getDB
 from sqlalchemy.orm import Session
 from api.models import File
 from fastapi import Depends, Response, UploadFile
@@ -10,6 +10,8 @@ import datetime as dt
 import shutil
 import magic
 
+from api.schemas.upload import UploadFileResponse
+
 
 BASE_DIR = Path(__file__).parents[1]
 PUBLIC_DIR = Path(BASE_DIR).joinpath("storage", "public")
@@ -18,8 +20,8 @@ print(dt.datetime.now(dt.UTC))
 
 
 async def db_upload_file(
-    db: Session,
     file: UploadFile,
+    db: Session,
     is_public=False,
 ):
     root_dir = PUBLIC_DIR if is_public else PRIVATE_DIR

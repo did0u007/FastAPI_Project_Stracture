@@ -1,5 +1,6 @@
 import re
 from typing import Any
+from fastapi import UploadFile
 from pydantic import (
     BaseModel,
     EmailStr,
@@ -9,13 +10,12 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-
-from sqlalchemy.orm import Session
-from api.db import getDB
 from api.core.enums import UserType
-from api.models import State
-from api.schemas import CityResponse, StateResponse
-from . import validate_from_db as _is
+from .city import CityResponse, StateResponse
+from .upload import UploadFileRequest, UploadFileResponse
+
+
+# from api.schemas.upload import UploadFileRequest, UploadFileResponse
 
 password_pattern = re.compile(
     r"^(?=.*[a-z])"  # At least one lowercase letter
@@ -37,7 +37,7 @@ class User(BaseModel):
     @classmethod
     def validate_username(cls, value):
         if " " in value:
-            raise ValueError("Username can't have whitespace characters")
+            raise ValueError("Username can't have whitespaces")
         return value
 
 
@@ -63,21 +63,6 @@ class UserRequest(User):
             raise ValueError("Password confirmation must be identical to the password")
         return value
 
-    @field_validator("state_id")
-    @classmethod
-    def validate_state(cls, value):
-        if not _is.valid_state(value):
-            raise ValueError(f"Invalid state ID {value}")
-        return value
-
-    @field_validator("city_id")
-    @classmethod
-    def validate_city(cls, value, info: ValidationInfo):
-        if not _is.valid_city(value):
-            raise ValueError(f"Invalid city ID {value}")
-        if not _is.valid_state_city(info.data.get("state_id"), value):  # type: ignore
-            return value
-
     @model_validator(mode="after")
     def final_validator(self) -> "UserRequest":
         self.__delattr__("confirmed_password")
@@ -86,9 +71,9 @@ class UserRequest(User):
 
 class UserResponse(User):
     id: int
-    profile_img: str | None
+    profile_img: UploadFileResponse | None = None
     # remember_token: str | None
-    city: CityResponse | None
+    city: CityResponse | None = None
     state: StateResponse
     user_type: UserType
 

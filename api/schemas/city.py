@@ -6,7 +6,6 @@ from pydantic import (
     constr,
     field_validator,
 )
-from . import validate_from_db as _is
 
 
 class CityRequest(BaseModel):
@@ -17,14 +16,6 @@ class CityRequest(BaseModel):
     @classmethod
     def vildate_name(cls, value: str):
         return value.title()
-
-    @field_validator("state_id")
-    @classmethod
-    def vildate_state(cls, value: int):
-        if not _is.valid_state(value):
-            raise ValueError(f"Invalid state ID {value}")
-
-        return value
 
 
 class CityResponse(CityRequest):
