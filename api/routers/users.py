@@ -1,23 +1,23 @@
 from typing import Annotated
-from fastapi import APIRouter, Body, Depends, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile
 from api.db import getDB
-from api.models import User
-from api.schemas import UserResponse, UserRequest
+from api.schemas import UserRequest
 from sqlalchemy.orm import Session
 from api.crud import user as us
+from api.schemas import UserResponse
 
 
 router = APIRouter(prefix="/user", tags=["user"])
 
 
 ############## Create User #####################
-@router.post("/create")
+@router.post("/create", response_model=UserResponse)
 async def create_user(
-    user: Annotated[UserRequest, Body],
+    user: Annotated[UserRequest, Depends(us.get_user_depends)],
     db: Session = Depends(getDB),
-    img: UploadFile | None = None,
+    profile_img: UploadFile = File(default=None),
 ):
-    return await us.db_ceate_user(db, user, img)
+    return await us.db_ceate_user(db, user, profile_img)
 
 
 ####################### ADMIN PRIVLEGE ONLY #################

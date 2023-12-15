@@ -1,11 +1,11 @@
 from api.core.helper import raise_error
 from api.db import getDB
 from sqlalchemy.orm import Session
-from api.models import File
-from fastapi import Depends, Response, UploadFile
+from api.models import File as UpFile
+from fastapi import Depends, Response, UploadFile, File
 from fastapi import status
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 import datetime as dt
 import shutil
 import magic
@@ -20,10 +20,10 @@ print(dt.datetime.now(dt.UTC))
 
 
 async def db_upload_file(
-    file: UploadFile,
     db: Session,
+    file: UploadFile = File(...),
     is_public=False,
-):
+) -> Dict[str, int | str]:  # type: ignore
     root_dir = PUBLIC_DIR if is_public else PRIVATE_DIR
     __tmp = dt.datetime.now(dt.UTC)
     y_dir = str(__tmp.year)
@@ -37,7 +37,7 @@ async def db_upload_file(
         with open(file_path, "w+b") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        __file = File()
+        __file = UpFile()
         __file.file_name = file_name
         __file.path = str(Path(file_path).parent)
 

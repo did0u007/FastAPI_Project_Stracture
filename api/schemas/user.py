@@ -1,6 +1,4 @@
 import re
-from typing import Any
-from fastapi import UploadFile
 from pydantic import (
     BaseModel,
     EmailStr,
@@ -12,7 +10,7 @@ from pydantic import (
 )
 from api.core.enums import UserType
 from .city import CityResponse, StateResponse
-from .upload import UploadFileRequest, UploadFileResponse
+from .upload import UploadFileResponse
 
 
 # from api.schemas.upload import UploadFileRequest, UploadFileResponse
@@ -71,11 +69,11 @@ class UserRequest(User):
 
 class UserResponse(User):
     id: int
-    profile_img: UploadFileResponse | None = None
     # remember_token: str | None
     city: CityResponse | None = None
     state: StateResponse
     user_type: UserType
+    image: UploadFileResponse | None = None
 
     class Config:
         from_attributes = True

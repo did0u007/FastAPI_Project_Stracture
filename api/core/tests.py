@@ -1,4 +1,5 @@
-a = [3, 2]
+def test(a="a", b="b"):
+    print(locals())
 
-if (n := a[0]) >= 1:
-    print(n)
+
+test()

@@ -39,7 +39,7 @@ async def db_create_states(db: Session, states: List[StateRequest]):  # type: ig
     try:
         objs = [State(name=state.name) for state in states]  # type: ignore
         db.add_all(objs)
-        # db.flush(objs)
+        db.flush(objs)
         db.commit()
         return objs
     except DatabaseError as e:
