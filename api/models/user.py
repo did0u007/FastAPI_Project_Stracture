@@ -12,7 +12,7 @@ class User(Base):
     #
     id: Mapped[int] = Column(primary_key=True, autoincrement="auto")
     name: Mapped[Optional[str]] = Column(Unicode(50), index=True, nullable=True)
-    username: Mapped[str] = Column(Unicode(50), index=True)
+    username: Mapped[str] = Column(Unicode(50), index=True, unique=True)
     email: Mapped[str] = Column(Unicode(255), unique=True, index=True)
     password: Mapped[str] = Column(Unicode(50))
     profile_img: Mapped[Optional[int]] = Column(ForeignKey("images.id"), nullable=True)

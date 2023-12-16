@@ -1,11 +1,12 @@
 from api.schemas.state import StateRequest
-from api.core.helper import raise_error, sublists
+from api.core.helper import raise_error
 from sqlalchemy.orm import Session
 from api.models import State
-from sqlite3 import DatabaseError
 from fastapi import status
 from typing import List
 from cache import AsyncTTL
+from sqlalchemy.exc import IntegrityError
+from api.core.helper import integrety_error_hundler as ieh
 
 
 ######## Get State By ID ##############
@@ -25,26 +26,15 @@ async def db_get_all_states(db: Session):
 
 ######## Create State ##############
 async def db_create_states(db: Session, states: List[StateRequest]):  # type: ignore
-    existing_state = await db_get_all_states(db)
-    if existing_state:
-        diff = sublists(
-            [i.name for i in states], [i.name for i in existing_state]  # type: ignore
-        )
-        if diff:
-            raise_error(
-                status.HTTP_406_NOT_ACCEPTABLE,
-                f"You Try To Dublicate An Existing Item {diff}",
-            )
-
     try:
         objs = [State(name=state.name) for state in states]  # type: ignore
         db.add_all(objs)
         db.flush(objs)
         db.commit()
         return objs
-    except DatabaseError as e:
+    except IntegrityError as e:
         db.rollback()
-        raise_error(502, str(e))
+        raise_error(status.HTTP_409_CONFLICT, ieh(e.orig))
 
 
 ######## Drop States ##############
@@ -55,7 +45,7 @@ async def db_drop_states(db: Session, states: List[int]):
         return dropped
     except Exception as e:
         db.rollback()
-        raise_error(502, str(e))
+        raise_error(status.HTTP_409_CONFLICT, "Operation Failed")
 
 
 ######## Update States ##############
@@ -67,4 +57,4 @@ async def db_update_state(db: Session, state_id: int, new_name: str):
         return old_state
     except Exception as e:
         db.rollback()
-        raise_error(status.HTTP_500_INTERNAL_SERVER_ERROR, str(e))
+        raise_error(status.HTTP_409_CONFLICT, "Operation Failed")

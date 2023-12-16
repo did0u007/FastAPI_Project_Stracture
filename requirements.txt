@@ -10,6 +10,5 @@ pysqlite3
 pymysql
 alembic 
 async-cache
-python-magic
 python-magic-bin
 asyncer

@@ -5,6 +5,8 @@ from api.models import City, State
 from fastapi import status
 from typing import List
 from cache import AsyncTTL
+from sqlalchemy.exc import IntegrityError
+from api.core.helper import integrety_error_hundler as ieh
 
 
 ######## Get City By ID ##############
@@ -69,8 +71,8 @@ async def db_create_city(
         db.flush(cities_objs)
         db.commit()
         return cities_objs
-    except Exception as e:
-        raise_error(status.HTTP_501_NOT_IMPLEMENTED, str(e))
+    except IntegrityError as e:
+        raise_error(status.HTTP_409_CONFLICT, ieh(e.orig))
 
 
 async def db_drop_cities(db: Session, cities: List[int]):

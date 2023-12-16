@@ -7,3 +7,7 @@ def raise_error(statu_code: int, detail: str):
 
 def sublists(j, k):
     return list(set(j) & set(k))
+
+
+def integrety_error_hundler(error) -> str:
+    return eval(str(error))[1]

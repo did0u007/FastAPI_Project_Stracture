@@ -8,6 +8,7 @@ from api.models.user import User
 from api.schemas.user import UserRequest
 from api.crud import file as fl
 from sqlalchemy.exc import IntegrityError
+from api.core.helper import integrety_error_hundler as ieh
 
 
 async def get_user_depends(
@@ -36,14 +37,13 @@ async def db_ceate_user(db: Session, user: UserRequest, img=None):
     try:
         # type: ignore
         db.add(db_user)
+        if img is not None:
+            user_img = await fl.db_upload_file(db, img, is_public=True)
+            db_user.profile_img = user_img.get("id")  # type: ignore
+        db.flush([db_user])
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        raise_error(status.HTTP_409_CONFLICT, ieh(e.orig))  # TODO: handle exception
 
-    except IntegrityError as e:  #
-        # print(str(e.detail))
-        raise_error(status.HTTP_410_GONE, str(e.detail))  # TODO: handle exception
-    if img is not None:
-        user_img = await fl.db_upload_file(db, img, is_public=True)
-        db_user.profile_img = user_img.get("id")  # type: ignore
-        # data["profile_img"] = profile_img.get("id")
-    db.flush([db_user])
-    db.commit()
     return db_user

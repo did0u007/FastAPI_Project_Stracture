@@ -1,16 +1,15 @@
 from api.core.helper import raise_error
-from api.db import getDB
 from sqlalchemy.orm import Session
 from api.models import File as UpFile
 from fastapi import Depends, Response, UploadFile, File
 from fastapi import status
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 import datetime as dt
 import shutil
 import magic
-
-from api.schemas.upload import UploadFileResponse
+from sqlalchemy.exc import IntegrityError
+from api.core.helper import integrety_error_hundler as ieh
 
 
 BASE_DIR = Path(__file__).parents[1]
@@ -43,18 +42,19 @@ async def db_upload_file(
 
         db.add(__file)
         db.flush([__file])
-        db.commit()
+        # db.commit()  # Here DB will be commited from the parent function who's call this one.
         return {
             "id": __file.id,
             "file_name": file_name,
         }
 
-    except Exception as e:
-        raise_error(status.HTTP_504_GATEWAY_TIMEOUT, str(e))
+    except IntegrityError as e:
+        db.rollback()
+        raise_error(status.HTTP_409_CONFLICT, ieh(e.orig))
 
 
 async def db_get_file(db: Session, filename: str, id: int = 0):
-    db_file = db.query(File).filter(File.file_name == filename).first()
+    db_file = db.query(UpFile).filter(File.file_name == filename).first()
     if db_file is None:
         raise_error(status.HTTP_404_NOT_FOUND, f"File not found {filename}")
     file = Path(db_file.path).joinpath(db_file.file_name)  # type: ignore
