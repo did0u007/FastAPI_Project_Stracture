@@ -9,6 +9,7 @@ from pydantic import (
     model_validator,
 )
 from api.core.enums import UserType
+from api.core.security import hash_pass
 from .city import CityResponse, StateResponse
 from .upload import UploadFileResponse
 
@@ -64,6 +65,7 @@ class UserRequest(User):
     @model_validator(mode="after")
     def final_validator(self) -> "UserRequest":
         self.__delattr__("confirmed_password")
+        self.password = hash_pass(self.password)
         return self
 
 

@@ -6,14 +6,14 @@ options = {
 }
 
 
-class Settings:
+class SettingsClass:
     def __init__(self):
         for key, value in [*dotenv_values().items(), *options.items()]:
             setattr(self, key, value)
 
 
-st = Settings()
-DATABASE_URL = f"{st.DB_CONNECTION}://{st.DB_USERNAME}:{st.DB_PASSWORD}@{st.DB_HOST}:{st.DB_PORT}/{st.DB_DATABASE}"  # type: ignore
+Settings = SettingsClass()
+DATABASE_URL = f"{Settings.DB_CONNECTION}://{Settings.DB_USERNAME}:{Settings.DB_PASSWORD}@{Settings.DB_HOST}:{Settings.DB_PORT}/{Settings.DB_DATABASE}"  # type: ignore
 # print(DATABASE_URL)
 
 

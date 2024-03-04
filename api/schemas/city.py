@@ -1,11 +1,11 @@
-from api.db import getDB
-from api.schemas import StateResponse
 from pydantic import (
     BaseModel,
     PositiveInt,
     constr,
     field_validator,
 )
+
+from api.schemas.state import StateResponse
 
 
 class CityRequest(BaseModel):

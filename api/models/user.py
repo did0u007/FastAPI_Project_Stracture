@@ -14,7 +14,7 @@ class User(Base):
     name: Mapped[Optional[str]] = Column(Unicode(50), index=True, nullable=True)
     username: Mapped[str] = Column(Unicode(50), index=True, unique=True)
     email: Mapped[str] = Column(Unicode(255), unique=True, index=True)
-    password: Mapped[str] = Column(Unicode(50))
+    password: Mapped[str] = Column(Unicode(255))
     profile_img: Mapped[Optional[int]] = Column(ForeignKey("images.id"), nullable=True)
     remember_token: Mapped[str] = Column(Unicode(255), nullable=True)
     user_type: Mapped[UserType] = Column(default=UserType.USER, nullable=False)
@@ -29,3 +29,6 @@ class User(Base):
     city = relationship("City", foreign_keys=city_id)
     state = relationship("State", foreign_keys=state_id)
     image = relationship("File", foreign_keys=profile_img)
+
+    def soft_delete(self):
+        self.deleted_at = dt.datetime.now(dt.UTC)

@@ -1,0 +1,69 @@
+INFO [process_setup] [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6019) started ============
+INFO [process_setup] [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6045) started ============
+INFO [process_setup] [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6023) started ============
+ERROR [panic_handling] [2023-12-31:13:35:30 WD-TabNine ERROR] PanicInfo { payload: Any { .. }, message: Some(Error performing stderr logging after error occurred during regular logging.
+	attempted to log: [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6045) started ============
+	record: Record { metadata: Metadata { level: Info, target: "process_setup" }, args: [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6045) started ============, module_path: Some(Borrowed("process_setup")), file: Some(Borrowed("shared/process_setup/src/lib.rs")), line: Some(224) }
+	first logging error: Broken pipe (os error 32)
+	stderr error: Broken pipe (os error 32)), location: Location { file: "/cargo/registry/src/index.crates.io-6f17d22bba15001f/fern-0.5.9/src/log_impl.rs", line: 736, col: 9 }, can_unwind: true, force_no_backtrace: false },    0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+
+ERROR [panic_handling] [2023-12-31:13:35:30 WD-TabNine ERROR] PanicInfo { payload: Any { .. }, message: Some(Error performing stderr logging after error occurred during regular logging.
+	attempted to log: [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6019) started ============
+	record: Record { metadata: Metadata { level: Info, target: "process_setup" }, args: [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6019) started ============, module_path: Some(Borrowed("process_setup")), file: Some(Borrowed("shared/process_setup/src/lib.rs")), line: Some(224) }
+	first logging error: Broken pipe (os error 32)
+	stderr error: Broken pipe (os error 32)), location: Location { file: "/cargo/registry/src/index.crates.io-6f17d22bba15001f/fern-0.5.9/src/log_impl.rs", line: 736, col: 9 }, can_unwind: true, force_no_backtrace: false },    0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+
+ERROR [panic_handling] [2023-12-31:13:35:30 WD-TabNine ERROR] PanicInfo { payload: Any { .. }, message: Some(Error performing stderr logging after error occurred during regular logging.
+	attempted to log: [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6023) started ============
+	record: Record { metadata: Metadata { level: Info, target: "process_setup" }, args: [2023-12-31:13:35:30 WD-TabNine INFO] 
+============ Tabnine process /home/did0u007/.config/Code/User/globalStorage/tabnine.tabnine-vscode/binaries/4.65.0/x86_64-unknown-linux-musl/WD-TabNine (6023) started ============, module_path: Some(Borrowed("process_setup")), file: Some(Borrowed("shared/process_setup/src/lib.rs")), line: Some(224) }
+	first logging error: Broken pipe (os error 32)
+	stderr error: Broken pipe (os error 32)), location: Location { file: "/cargo/registry/src/index.crates.io-6f17d22bba15001f/fern-0.5.9/src/log_impl.rs", line: 736, col: 9 }, can_unwind: true, force_no_backtrace: false },    0: <unknown>
+   1: <unknown>
+   2: <unknown>
+   3: <unknown>
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <unknown>
+

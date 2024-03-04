@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, Depends, File, Path, Query, UploadFile
 from api.db import getDB
 from api.schemas import UserRequest
 from sqlalchemy.orm import Session
@@ -26,3 +26,12 @@ async def create_user(
 async def get_user_by_id(id: int):
     print("on")
     return {"test": f"passed {id}"}
+
+
+@router.get("/{id}/delete", tags=["admin"])
+async def drope_user(
+    id: Annotated[int, Path],
+    soft: Annotated[bool, Query] = True,
+    db: Session = Depends(getDB),
+):
+    return await us.db_drope_user(db, id, soft)
